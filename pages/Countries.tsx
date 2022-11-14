@@ -73,7 +73,7 @@ export default class Home extends React.Component<{}, AppState> {
       )
   }
 
-    render() {
+  render() {
       const { error, isLoaded, items } = this.state;
       if (error) {
         return <div>Got an Error: {error.message}</div>;
