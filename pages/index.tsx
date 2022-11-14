@@ -1,8 +1,8 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import Country from "./Country";
-import AddCountry from "./AddCountry";
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
+import Countries from "./Countries";
+
 import React from "react";
 
 interface AppState {
@@ -21,78 +21,23 @@ export default class Home extends React.Component<{}, AppState> {
     };
   }
 
-  componentDidMount() {
-    fetch("https://8spvlsgby5.execute-api.us-east-1.amazonaws.com/items")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result.Items
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
-  }
-
-  deletecountry(name: string) {
-    fetch("https://8spvlsgby5.execute-api.us-east-1.amazonaws.com/items/" + name, {method: 'DELETE'})
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result)
-          this.setState({items: this.state.items.filter( i => i.name !== name)});
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-  }
-
-  addcountry(name: string) {
-    fetch("https://8spvlsgby5.execute-api.us-east-1.amazonaws.com/items/" + name,
-      {
-        method: 'PUT',
-        body: JSON.stringify({}),
-        headers: {"Content-Type": "application/json"},
-      })
-      .then(res => res.json())
-      .then(
-        (result) => {
-          console.log(result)
-          this.setState({items: [...this.state.items, {name}]});
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-  }
-
     render() {
-      const { error, isLoaded, items } = this.state;
-      if (error) {
-        return <div>Got an Error: {error.message}</div>;
-      } else if (!isLoaded) {
-        return <div>Loading...</div>;
-      } else {
-        return <>
-          <ul>
-            {items.map((item:any) => (
-              <Country key={item.name}
-                country={item}
-                deletecountry={ (c:any) => this.deletecountry(c) } />
-            ))}
-            </ul>
-            <AddCountry addcountry={ (c:any) => this.addcountry(c) }/>
-          </>
-      }
+      return (
+        <div className={styles.container}>
+          <Head>
+            <title>Country Listing</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <h1 className={styles.title}>
+           Countries
+          </h1>
+          <main className={styles.main}>
+            <Countries />
+          </main>
+          <footer className={styles.footer}>
+            <p>Brought to you by mZoo.org</p>
+          </footer>
+          </div>
+      )
     }
 }
